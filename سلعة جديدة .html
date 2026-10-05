@@ -1,0 +1,2572 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" style="--hero: #111111; --hero-text: #ffffff; --store-bg: #ffffff;"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Web Studio Store</title>
+
+<style>
+*{box-sizing:border-box}
+html,body{
+ margin:0;
+ min-height:100%;
+ background:#111;
+ font-family:Arial,Tahoma,sans-serif;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+
+.editor{
+ min-height:100vh;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ padding:15px;
+}
+
+.phone{
+ width:min(100%,420px);
+ height:min(850px,calc(100vh - 30px));
+ background:white;
+ border-radius:28px;
+ overflow:hidden;
+ position:relative;
+ box-shadow:0 0 0 5px #222,0 20px 60px #000;
+}
+
+.store{
+ height:100%;
+ overflow-y:auto;
+ background:var(--store-bg,#fff);
+ color:#111;
+}
+
+.header{
+ height:62px;
+ background:#fff;
+ display:flex;
+ align-items:center;
+ gap:8px;
+ padding:8px 12px;
+ position:sticky;
+ top:0;
+ z-index:20;
+ border-bottom:1px solid #eee;
+}
+
+.menu-btn,
+.header-page{
+ border:0;
+ border-radius:12px;
+ padding:10px;
+}
+
+.menu-btn{
+ width:42px;
+ background:#eee;
+}
+
+.header-page{
+ background:#111;
+ color:#fff;
+}
+
+.store-name{
+ flex:1;
+ font-weight:900;
+ font-size:18px;
+}
+
+.hero{
+ margin:14px;
+ min-height:235px;
+ padding:25px;
+ border-radius:25px;
+ background:var(--hero,#111);
+ color:var(--hero-text,#fff);
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+}
+
+.hero h1{
+ margin:0 0 10px;
+ font-size:30px;
+}
+
+.hero p{
+ line-height:1.7;
+ margin:0 0 18px;
+}
+
+.shop{
+ width:max-content;
+ border:0;
+ border-radius:13px;
+ padding:12px 18px;
+ background:#fff;
+ color:#111;
+ font-weight:900;
+}
+
+.section{
+ padding:10px 14px 35px;
+}
+
+.section-title{
+ font-size:23px;
+ font-weight:900;
+ margin:10px 0 15px;
+}
+
+.products{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:12px;
+}
+
+.product{
+ background:#fff;
+ border-radius:20px;
+ overflow:hidden;
+ box-shadow:0 4px 20px #0001;
+}
+
+.product-image{
+ height:180px;
+ background:#eee;
+}
+
+.product-image img{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+}
+
+.product-info{
+ padding:11px;
+}
+
+.product-name{
+ font-weight:900;
+ margin-bottom:6px;
+}
+
+.product-price{
+ font-weight:900;
+}
+
+.swatches{
+ display:flex;
+ flex-wrap:wrap;
+ gap:7px;
+ margin-top:10px;
+}
+
+.swatch{
+ width:23px;
+ height:23px;
+ border-radius:50%;
+ border:2px solid white;
+ outline:1px solid #888;
+}
+
+.buy{
+ width:100%;
+ margin-top:10px;
+ padding:10px;
+ border:0;
+ border-radius:12px;
+ background:#111;
+ color:#fff;
+}
+
+.tools{
+ position:absolute;
+ bottom:15px;
+ left:15px;
+ z-index:80;
+ border:0;
+ padding:13px 17px;
+ border-radius:17px;
+ background:#111;
+ color:#fff;
+ font-weight:900;
+ box-shadow:0 8px 30px #0007;
+}
+
+.drawer{
+ position:absolute;
+ left:10px;
+ right:10px;
+ bottom:10px;
+ max-height:82%;
+ overflow:auto;
+ background:#171717;
+ color:#fff;
+ border-radius:23px;
+ padding:15px;
+ z-index:100;
+ display:none;
+}
+
+.drawer.open{display:block}
+
+.drawer-top{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ margin-bottom:12px;
+}
+
+.close{
+ width:38px;
+ height:38px;
+ border:0;
+ border-radius:11px;
+ background:#333;
+ color:#fff;
+}
+
+.tabs{
+ display:flex;
+ gap:7px;
+ overflow-x:auto;
+ padding-bottom:12px;
+}
+
+.tab{
+ flex:none;
+ border:0;
+ padding:9px 12px;
+ border-radius:11px;
+ background:#292929;
+ color:#fff;
+}
+
+.tab.active{
+ background:#fff;
+ color:#111;
+}
+
+.panel{display:none}
+.panel.active{display:block}
+
+.field{
+ margin-bottom:12px;
+}
+
+.field label{
+ display:block;
+ color:#ccc;
+ font-size:13px;
+ margin-bottom:6px;
+}
+
+.field input,
+.field textarea,
+.field select{
+ width:100%;
+ padding:11px;
+ border-radius:12px;
+ border:1px solid #444;
+ background:#222;
+ color:#fff;
+ outline:none;
+}
+
+.field textarea{
+ min-height:80px;
+ resize:vertical;
+}
+
+.action{
+ width:100%;
+ padding:12px;
+ margin-top:7px;
+ border:0;
+ border-radius:12px;
+ background:#fff;
+ color:#111;
+ font-weight:900;
+}
+
+.action.dark{
+ background:#333;
+ color:#fff;
+}
+
+.action.green{
+ background:#16a34a;
+ color:#fff;
+}
+
+.product-admin{
+ background:#222;
+ border-radius:15px;
+ padding:12px;
+ margin-top:10px;
+}
+
+.product-admin-title{
+ font-weight:900;
+ margin-bottom:8px;
+}
+
+.modal{
+ position:absolute;
+ inset:0;
+ background:#0009;
+ z-index:200;
+ display:none;
+ align-items:center;
+ justify-content:center;
+ padding:10px;
+}
+
+.modal.open{display:flex}
+
+.modal-box{
+ width:100%;
+ max-height:calc(100% - 5px);
+ overflow:auto;
+ background:#fff;
+ color:#111;
+ border-radius:22px;
+ padding:16px;
+}
+
+.modal-header{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-bottom:12px;
+}
+
+.modal-header h2{
+ margin:0;
+}
+
+.modal-close{
+ width:38px;
+ height:38px;
+ border:0;
+ border-radius:11px;
+ background:#eee;
+}
+
+.detail-image{
+ width:100%;
+ height:290px;
+ object-fit:cover;
+ background:#eee;
+ border-radius:18px;
+}
+
+.detail-colors{
+ display:flex;
+ gap:9px;
+ flex-wrap:wrap;
+ margin:13px 0;
+}
+
+.detail-color{
+ width:38px;
+ height:38px;
+ border-radius:50%;
+ border:3px solid #fff;
+ outline:2px solid #999;
+}
+
+.detail-color.selected{
+ outline:3px solid #111;
+}
+
+.quantity{
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ gap:18px;
+ margin:15px 0;
+}
+
+.quantity button{
+ width:42px;
+ height:42px;
+ border:0;
+ border-radius:12px;
+ background:#eee;
+}
+
+.quantity strong{
+ font-size:20px;
+}
+
+.summary{
+ background:#f3f3f3;
+ padding:12px;
+ border-radius:13px;
+ margin-bottom:12px;
+ line-height:1.8;
+}
+
+.social{
+ display:grid;
+ gap:9px;
+}
+
+.social a{
+ display:block;
+ padding:14px;
+ background:#f2f2f2;
+ color:#111;
+ text-decoration:none;
+ border-radius:13px;
+ font-weight:900;
+}
+
+.color-box{
+ background:#292929;
+ padding:10px;
+ border-radius:14px;
+ margin-bottom:10px;
+}
+
+.color-top{
+ display:flex;
+ gap:8px;
+ align-items:center;
+}
+
+.color-picker{
+ width:42px!important;
+ height:38px;
+ padding:0!important;
+}
+
+.color-name{
+ flex:1;
+}
+
+.remove-color{
+ border:0;
+ background:#dc2626;
+ color:#fff;
+ padding:8px 10px;
+ border-radius:9px;
+}
+
+.image-preview{
+ width:100%;
+ height:140px;
+ object-fit:cover;
+ border-radius:11px;
+ background:#111;
+ display:block;
+ margin-top:9px;
+}
+
+.file-btn{
+ display:block;
+ width:100%;
+ padding:11px;
+ text-align:center;
+ border-radius:10px;
+ background:#fff;
+ color:#111;
+ font-weight:900;
+ margin-top:8px;
+}
+
+.notice{
+ font-size:12px;
+ color:#777;
+ line-height:1.7;
+}
+
+.empty{
+ text-align:center;
+ padding:20px;
+ color:#777;
+}
+</style>
+</head>
+
+<body>
+
+<div class="editor">
+
+<div class="phone">
+
+<div class="store" id="store">
+
+<header class="header">
+
+<button class="menu-btn" onclick="openTools()">☰</button>
+
+<div class="store-name" id="storeName">متجري</div>
+
+<button class="header-page" onclick="openSocial()">
+صفحتنا
+</button>
+
+</header>
+
+<section class="hero">
+
+<h1 id="heroTitle">اكتشف مجموعتنا الجديدة</h1>
+
+<p id="heroDescription">منتجات مختارة لك بعناية وبأفضل الأسعار.</p>
+
+<button class="shop" onclick="scrollProducts()">
+تسوق الآن
+</button>
+
+</section>
+
+<section class="section" id="productsSection">
+
+<div class="section-title">
+منتجاتنا
+</div>
+
+<div class="products" id="products"><div class="product">
+
+<div class="product-image">
+
+<img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&amp;fit=crop&amp;w=900&amp;q=80">
+
+</div>
+
+<div class="product-info">
+
+<div class="product-name">
+هودي أسود
+</div>
+
+<div class="product-price">
+8500 دج
+</div>
+
+<div class="swatches">
+
+
+
+<button class="swatch" style="background:#111111" title="أسود" onclick="openProduct(1,0)">
+</button>
+
+
+
+<button class="swatch" style="background:#ef4444" title="أحمر" onclick="openProduct(1,1)">
+</button>
+
+
+
+</div>
+
+<button class="buy" onclick="openProduct(1,0)">
+عرض المنتج
+</button>
+
+</div>
+</div></div>
+
+</section>
+
+</div>
+
+<button class="tools" onclick="openTools()">
+⚙️ الأدوات
+</button>
+
+
+<!-- الأدوات -->
+
+<div class="drawer open" id="drawer">
+
+<div class="drawer-top">
+<strong>Web Studio</strong>
+<button class="close" onclick="closeTools()">×</button>
+</div>
+
+<div class="tabs">
+
+<button class="tab" onclick="showPanel('productsPanel',this)">
+المنتجات
+</button>
+
+<button class="tab" onclick="showPanel('appearancePanel',this)">
+المظهر
+</button>
+
+<button class="tab" onclick="showPanel('linksPanel',this)">
+الروابط
+</button>
+
+<button class="tab active" onclick="showPanel('settingsPanel',this)">
+الإعدادات
+</button>
+
+</div>
+
+
+<div class="panel" id="productsPanel">
+
+<button class="action" onclick="createProduct()">
+＋ إضافة منتج
+</button>
+
+<div id="adminProducts"><div class="product-admin">
+
+<div class="product-admin-title">
+هودي أسود
+</div>
+
+عدد الألوان:
+<strong>2</strong>
+
+<button class="action" onclick="editProduct(1)">
+✏️ تعديل المنتج والصور
+</button>
+
+<button class="action dark" onclick="deleteProduct(1)">
+🗑 حذف المنتج
+</button>
+</div></div>
+
+</div>
+
+
+<div class="panel" id="appearancePanel">
+
+<div class="field">
+<label>اسم المتجر</label>
+<input id="appearanceName">
+</div>
+
+<div class="field">
+<label>عنوان البانر</label>
+<input id="appearanceTitle">
+</div>
+
+<div class="field">
+<label>وصف البانر</label>
+<textarea id="appearanceDescription"></textarea>
+</div>
+
+<div class="field">
+<label>لون البانر</label>
+<input type="color" id="appearanceHeroColor">
+</div>
+
+<div class="field">
+<label>لون نص البانر</label>
+<input type="color" id="appearanceHeroText">
+</div>
+
+<div class="field">
+<label>خلفية المتجر</label>
+<input type="color" id="appearanceBackground">
+</div>
+
+<button class="action" onclick="saveAppearance()">
+حفظ المظهر
+</button>
+
+</div>
+
+
+<div class="panel" id="linksPanel">
+
+<div class="field">
+<label>Instagram</label>
+<input id="instagram">
+</div>
+
+<div class="field">
+<label>TikTok</label>
+<input id="tiktok">
+</div>
+
+<div class="field">
+<label>Facebook</label>
+<input id="facebook">
+</div>
+
+<div class="field">
+<label>WhatsApp</label>
+<input id="socialWhatsapp">
+</div>
+
+<div class="field">
+<label>الموقع</label>
+<input id="website">
+</div>
+
+<button class="action" onclick="saveLinks()">
+حفظ الروابط
+</button>
+
+</div>
+
+
+<div class="panel active" id="settingsPanel">
+
+<div class="field">
+<label>رقم WhatsApp لاستقبال الطلبات</label>
+<input id="orderWhatsapp" placeholder="213655984049">
+</div>
+
+<button class="action" onclick="saveSettings()">
+حفظ الرقم
+</button>
+
+<button class="action dark" onclick="saveStoreFile()">
+💾 حفظ المتجر
+</button>
+
+</div>
+
+</div>
+
+
+<!-- تفاصيل المنتج -->
+
+<div class="modal" id="productModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2 id="detailProductName">المنتج</h2>
+
+<button class="modal-close" onclick="closeModal('productModal')">
+×
+</button>
+
+</div>
+
+<img id="detailImage" class="detail-image">
+
+<p id="detailDescription"></p>
+
+<strong id="detailPrice"></strong>
+
+<div class="detail-colors" id="detailColors"></div>
+
+<div class="field">
+<label>المقاس</label>
+<select id="detailSize"></select>
+</div>
+
+<div class="quantity">
+
+<button onclick="changeQuantity(-1)">−</button>
+
+<strong id="quantityValue">1</strong>
+
+<button onclick="changeQuantity(1)">+</button>
+
+</div>
+
+<button class="action" onclick="openCheckout()">
+متابعة الطلب
+</button>
+
+</div>
+
+</div>
+
+
+<!-- تعديل المنتج -->
+
+<div class="modal" id="editProductModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>تعديل المنتج</h2>
+
+<button class="modal-close" onclick="closeModal('editProductModal')">
+×
+</button>
+
+</div>
+
+<div class="field">
+<label>اسم المنتج</label>
+<input id="editName">
+</div>
+
+<div class="field">
+<label>السعر</label>
+<input id="editPrice" type="number">
+</div>
+
+<div class="field">
+<label>الوصف</label>
+<textarea id="editDescription"></textarea>
+</div>
+
+<div class="field">
+<label>المقاسات — افصل بينها بفاصلة</label>
+<input id="editSizes" placeholder="S,M,L,XL,XXL">
+</div>
+
+<h3>الألوان والصور</h3>
+
+<div id="editColors"></div>
+
+<button class="action" onclick="addColor()">
+＋ إضافة لون جديد
+</button>
+
+<button class="action" onclick="saveProduct()">
+💾 حفظ المنتج
+</button>
+
+</div>
+
+</div>
+
+
+<!-- الطلب -->
+
+<div class="modal" id="checkoutModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>إتمام الطلب</h2>
+
+<button class="modal-close" onclick="closeModal('checkoutModal')">
+×
+</button>
+
+</div>
+
+<div class="summary" id="checkoutSummary"></div>
+
+<div class="field">
+<label>الاسم</label>
+<input id="firstName">
+</div>
+
+<div class="field">
+<label>اللقب</label>
+<input id="lastName">
+</div>
+
+<div class="field">
+<label>الهاتف</label>
+<input id="phone">
+</div>
+
+<div class="field">
+<label>الولاية</label>
+
+<select id="wilaya" onchange="loadCommunes()">
+<option value="">اختر الولاية</option>
+<option value="01">01 - أدرار</option><option value="02">02 - الشلف</option><option value="03">03 - الأغواط</option><option value="04">04 - أم البواقي</option><option value="05">05 - باتنة</option><option value="06">06 - بجاية</option><option value="07">07 - بسكرة</option><option value="08">08 - بشار</option><option value="09">09 - البليدة</option><option value="10">10 - البويرة</option><option value="11">11 - تمنراست</option><option value="12">12 - تبسة</option><option value="13">13 - تلمسان</option><option value="14">14 - تيارت</option><option value="15">15 - تيزي وزو</option><option value="16">16 - الجزائر</option><option value="17">17 - الجلفة</option><option value="18">18 - جيجل</option><option value="19">19 - سطيف</option><option value="20">20 - سعيدة</option><option value="21">21 - سكيكدة</option><option value="22">22 - سيدي بلعباس</option><option value="23">23 - عنابة</option><option value="24">24 - قالمة</option><option value="25">25 - قسنطينة</option><option value="26">26 - المدية</option><option value="27">27 - مستغانم</option><option value="28">28 - المسيلة</option><option value="29">29 - معسكر</option><option value="30">30 - ورقلة</option><option value="31">31 - وهران</option><option value="32">32 - البيض</option><option value="33">33 - إليزي</option><option value="34">34 - برج بوعريريج</option><option value="35">35 - بومرداس</option><option value="36">36 - الطارف</option><option value="37">37 - تندوف</option><option value="38">38 - تيسمسيلت</option><option value="39">39 - الوادي</option><option value="40">40 - خنشلة</option><option value="41">41 - سوق أهراس</option><option value="42">42 - تيبازة</option><option value="43">43 - ميلة</option><option value="44">44 - عين الدفلى</option><option value="45">45 - النعامة</option><option value="46">46 - عين تموشنت</option><option value="47">47 - غرداية</option><option value="48">48 - غليزان</option><option value="49">49 - تيميمون</option><option value="50">50 - برج باجي مختار</option><option value="51">51 - أولاد جلال</option><option value="52">52 - بني عباس</option><option value="53">53 - عين صالح</option><option value="54">54 - عين قزام</option><option value="55">55 - تقرت</option><option value="56">56 - جانت</option><option value="57">57 - المغير</option><option value="58">58 - المنيعة</option><option value="59">59 - أفلو</option><option value="60">60 - بريكة</option><option value="61">61 - القنطرة</option><option value="62">62 - بئر العاتر</option><option value="63">63 - العريشة</option><option value="64">64 - قصر الشلالة</option><option value="65">65 - عين وسارة</option><option value="66">66 - مسعد</option><option value="67">67 - قصر البخاري</option><option value="68">68 - بوسعادة</option><option value="69">69 - الأبيض سيدي الشيخ</option></select>
+
+</div>
+
+<div class="field">
+<label>البلدية</label>
+
+<select id="commune">
+<option value="">اختر البلدية</option>
+</select>
+
+</div>
+
+<div class="field">
+<label>العنوان</label>
+<textarea id="address"></textarea>
+</div>
+
+<div class="field">
+<label>ملاحظة</label>
+<textarea id="note"></textarea>
+</div>
+
+<button class="action green" onclick="shareCompleteOrder()">
+📸 إرسال الصورة + معلومات الطلب
+</button>
+
+<button class="action" onclick="sendWhatsAppText()">
+💬 إرسال المعلومات مباشرة إلى WhatsApp
+</button>
+
+<p class="notice">
+زر «إرسال الصورة + معلومات الطلب» يفتح مشاركة الهاتف،
+ثم اختر WhatsApp، وسيتم تمرير الصورة ومعلومات الطلب معًا.
+</p>
+
+</div>
+
+</div>
+
+
+<!-- الروابط -->
+
+<div class="modal" id="socialModal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2>صفحتنا</h2>
+
+<button class="modal-close" onclick="closeModal('socialModal')">
+×
+</button>
+
+</div>
+
+<div class="social" id="socialLinks"></div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<script>try{localStorage.setItem("WEB_STUDIO_FINAL_V2","{\"storeName\":\"متجري\",\"heroTitle\":\"اكتشف مجموعتنا الجديدة\",\"heroDescription\":\"منتجات مختارة لك بعناية وبأفضل الأسعار.\",\"heroColor\":\"#111111\",\"heroTextColor\":\"#ffffff\",\"background\":\"#ffffff\",\"orderWhatsapp\":\"213655984049\",\"social\":{\"instagram\":\"\",\"tiktok\":\"\",\"facebook\":\"\",\"whatsapp\":\"\",\"website\":\"\"},\"products\":[{\"id\":1,\"name\":\"هودي أسود\",\"price\":\"8500\",\"description\":\"هودي مريح للاستعمال اليومي.\",\"sizes\":[\"S\",\"M\",\"L\",\"XL\",\"XXL\"],\"colors\":[{\"id\":\"black-1\",\"name\":\"أسود\",\"hex\":\"#111111\",\"image\":\"https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=80\"},{\"id\":\"red-1\",\"name\":\"أحمر\",\"hex\":\"#ef4444\",\"image\":\"https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=80\"}]}]}");}catch(e){}</script><script>
+
+/* =====================================================
+   الحالة
+===================================================== */
+
+const defaultState={
+ storeName:"متجري",
+ heroTitle:"اكتشف مجموعتنا الجديدة",
+ heroDescription:"منتجات مختارة لك بعناية وبأفضل الأسعار.",
+ heroColor:"#111111",
+ heroTextColor:"#ffffff",
+ background:"#ffffff",
+ orderWhatsapp:"213655984049",
+
+ social:{
+  instagram:"",
+  tiktok:"",
+  facebook:"",
+  whatsapp:"",
+  website:""
+ },
+
+ products:[]
+};
+
+
+let state=null;
+
+try{
+ state=JSON.parse(
+  localStorage.getItem("WEB_STUDIO_FINAL_V2")
+ );
+}catch(e){}
+
+if(!state){
+ state=JSON.parse(JSON.stringify(defaultState));
+
+ state.products=[
+  {
+   id:1,
+   name:"هودي أسود",
+   price:"8500",
+   description:"هودي مريح للاستعمال اليومي.",
+   sizes:["S","M","L","XL","XXL"],
+   colors:[
+    {
+     id:"black-1",
+     name:"أسود",
+     hex:"#111111",
+     image:"https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+     id:"red-1",
+     name:"أحمر",
+     hex:"#ef4444",
+     image:"https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=80"
+    }
+   ]
+  }
+ ];
+}
+
+
+let currentProductId=null;
+let selectedProduct=null;
+let selectedColorIndex=0;
+let quantity=1;
+
+
+/* =====================================================
+   الحفظ
+===================================================== */
+
+function save(){
+
+ try{
+
+  localStorage.setItem(
+   "WEB_STUDIO_FINAL_V2",
+   JSON.stringify(state)
+  );
+
+ }catch(error){
+
+  alert(
+   "تعذر حفظ البيانات. قد تكون الصور كبيرة جدًا."
+  );
+
+ }
+
+}
+
+
+/* =====================================================
+   تحميل المتجر كملف HTML
+===================================================== */
+
+function saveStoreFile(){
+
+ /*
+   أولاً نحفظ آخر حالة للمتجر
+ */
+ save();
+
+ /*
+   نأخذ نسخة كاملة من الصفحة الحالية
+ */
+ const clonedDocument =
+   document.documentElement.cloneNode(true);
+
+ /*
+   نحفظ state الحالي داخل الملف نفسه.
+   عند فتح الملف يتم وضعه في localStorage
+   قبل تشغيل كود المتجر.
+ */
+ const stateJSON =
+   JSON.stringify(state);
+
+ const stateScript =
+   document.createElement("script");
+
+ stateScript.textContent =
+   'try{localStorage.setItem("WEB_STUDIO_FINAL_V2",' +
+   JSON.stringify(stateJSON) +
+   ');}catch(e){}';
+
+ /*
+   العثور على أول script
+ */
+ const firstScript =
+   clonedDocument.querySelector("script");
+
+ if(firstScript){
+
+   firstScript.parentNode.insertBefore(
+     stateScript,
+     firstScript
+   );
+
+ }else{
+
+   clonedDocument.body.appendChild(
+     stateScript
+   );
+
+ }
+
+ /*
+   إنشاء HTML كامل
+ */
+ const html =
+   "<!DOCTYPE html>\n" +
+   clonedDocument.outerHTML;
+
+ /*
+   إنشاء الملف
+ */
+ const blob =
+   new Blob(
+     [html],
+     {
+       type:"text/html;charset=utf-8"
+     }
+   );
+
+ /*
+   إنشاء رابط التحميل
+ */
+ const url =
+   URL.createObjectURL(blob);
+
+ const link =
+   document.createElement("a");
+
+ link.href=url;
+
+ link.download=
+   "my-store.html";
+
+ link.style.display="none";
+
+ document.body.appendChild(link);
+
+ /*
+   تنفيذ التحميل
+ */
+ link.click();
+
+ /*
+   حذف الرابط
+ */
+ link.remove();
+
+ /*
+   تحرير الذاكرة
+ */
+ setTimeout(function(){
+
+   URL.revokeObjectURL(url);
+
+ },3000);
+
+}
+
+
+/* =====================================================
+   المتجر
+===================================================== */
+
+function renderStore(){
+
+document.documentElement.style.setProperty(
+ "--hero",
+ state.heroColor
+);
+
+document.documentElement.style.setProperty(
+ "--hero-text",
+ state.heroTextColor
+);
+
+document.documentElement.style.setProperty(
+ "--store-bg",
+ state.background
+);
+
+document.getElementById("storeName").textContent=
+state.storeName;
+
+document.getElementById("heroTitle").textContent=
+state.heroTitle;
+
+document.getElementById("heroDescription").textContent=
+state.heroDescription;
+
+
+const box=document.getElementById("products");
+
+box.innerHTML="";
+
+
+state.products.forEach(product=>{
+
+const first=
+product.colors[0];
+
+const image=
+first && first.image
+? first.image
+: "";
+
+
+const card=document.createElement("div");
+
+card.className="product";
+
+card.innerHTML=`
+
+<div class="product-image">
+
+<img
+src="${image}"
+>
+
+</div>
+
+<div class="product-info">
+
+<div class="product-name">
+${escapeHTML(product.name)}
+</div>
+
+<div class="product-price">
+${escapeHTML(product.price)} دج
+</div>
+
+<div class="swatches">
+
+${product.colors.map((color,index)=>`
+
+<button
+class="swatch"
+style="background:${color.hex}"
+title="${escapeHTML(color.name)}"
+onclick="openProduct(${product.id},${index})">
+</button>
+
+`).join("")}
+
+</div>
+
+<button
+class="buy"
+onclick="openProduct(${product.id},0)">
+عرض المنتج
+</button>
+
+</div>
+`;
+
+box.appendChild(card);
+
+});
+
+renderAdminProducts();
+
+}
+
+
+/* =====================================================
+   لوحة المنتجات
+===================================================== */
+
+function renderAdminProducts(){
+
+const box=document.getElementById("adminProducts");
+
+box.innerHTML="";
+
+state.products.forEach(product=>{
+
+const div=document.createElement("div");
+
+div.className="product-admin";
+
+div.innerHTML=`
+
+<div class="product-admin-title">
+${escapeHTML(product.name)}
+</div>
+
+عدد الألوان:
+<strong>${product.colors.length}</strong>
+
+<button
+class="action"
+onclick="editProduct(${product.id})">
+✏️ تعديل المنتج والصور
+</button>
+
+<button
+class="action dark"
+onclick="deleteProduct(${product.id})">
+🗑 حذف المنتج
+</button>
+`;
+
+box.appendChild(div);
+
+});
+
+}
+
+
+/* =====================================================
+   إنشاء منتج
+===================================================== */
+
+function createProduct(){
+
+const id=Date.now();
+
+state.products.push({
+
+ id:id,
+
+ name:"منتج جديد",
+
+ price:"0",
+
+ description:"وصف المنتج",
+
+ sizes:["S","M","L","XL"],
+
+ colors:[
+  {
+   id:"color-"+id,
+   name:"اللون الأول",
+   hex:"#111111",
+   image:""
+  }
+ ]
+
+});
+
+save();
+
+renderStore();
+
+editProduct(id);
+
+}
+
+
+/* =====================================================
+   تعديل المنتج
+===================================================== */
+
+function editProduct(id){
+
+const product=
+state.products.find(p=>p.id===id);
+
+if(!product)return;
+
+currentProductId=id;
+
+document.getElementById("editName").value=
+product.name;
+
+document.getElementById("editPrice").value=
+product.price;
+
+document.getElementById("editDescription").value=
+product.description;
+
+document.getElementById("editSizes").value=
+product.sizes.join(",");
+
+renderColorEditor();
+
+document
+.getElementById("editProductModal")
+.classList.add("open");
+
+}
+
+
+/* =====================================================
+   محرر الألوان
+===================================================== */
+
+function renderColorEditor(){
+
+const product=
+state.products.find(p=>p.id===currentProductId);
+
+if(!product)return;
+
+const box=
+document.getElementById("editColors");
+
+box.innerHTML="";
+
+
+product.colors.forEach((color,index)=>{
+
+const div=document.createElement("div");
+
+div.className="color-box";
+
+div.innerHTML=`
+
+<div class="color-top">
+
+<input
+class="color-picker"
+type="color"
+value="${color.hex || "#111111"}"
+onchange="changeColorHex(${index},this.value)"
+>
+
+<input
+class="color-name"
+value="${escapeAttribute(color.name)}"
+placeholder="اسم اللون"
+oninput="changeColorName(${index},this.value)"
+>
+
+<button
+class="remove-color"
+onclick="removeColor(${index})">
+حذف
+</button>
+
+</div>
+
+<img
+class="image-preview"
+id="preview-${index}"
+src="${color.image || ""}"
+style="${color.image ? "" : "display:none"}"
+>
+
+<label class="file-btn">
+
+📷
+${color.image ? "تغيير صورة هذا اللون" : "اختيار صورة لهذا اللون"}
+
+<input
+type="file"
+accept="image/*"
+hidden
+onchange="changeColorImage(event,${index})"
+>
+
+</label>
+`;
+
+box.appendChild(div);
+
+});
+
+}
+
+
+/* =====================================================
+   اسم اللون
+===================================================== */
+
+function changeColorName(index,value){
+
+const product=
+state.products.find(p=>p.id===currentProductId);
+
+if(!product)return;
+
+product.colors[index].name=value;
+
+}
+
+
+/* =====================================================
+   لون اللون
+===================================================== */
+
+function changeColorHex(index,value){
+
+const product=
+state.products.find(p=>p.id===currentProductId);
+
+if(!product)return;
+
+product.colors[index].hex=value;
+
+save();
+
+renderStore();
+
+}
+
+
+/* =====================================================
+   الصورة الخاصة باللون
+===================================================== */
+
+function changeColorImage(event,index){
+
+const file=event.target.files[0];
+
+if(!file)return;
+
+if(!file.type.startsWith("image/")){
+
+alert("الملف يجب أن يكون صورة.");
+
+return;
+
+}
+
+
+const reader=new FileReader();
+
+
+reader.onload=function(e){
+
+const product=
+state.products.find(p=>p.id===currentProductId);
+
+if(!product)return;
+
+
+product.colors[index].image=
+e.target.result;
+
+
+const preview=
+document.getElementById("preview-"+index);
+
+if(preview){
+
+preview.src=e.target.result;
+
+preview.style.display="block";
+
+}
+
+
+save();
+
+renderStore();
+
+renderColorEditor();
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+
+/* =====================================================
+   إضافة لون
+===================================================== */
+
+function addColor(){
+
+const product=
+state.products.find(p=>p.id===currentProductId);
+
+if(!product)return;
+
+product.colors.push({
+
+ id:"color-"+Date.now()+"-"+Math.random(),
+
+ name:"لون جديد",
+
+ hex:"#22c55e",
+
+ image:""
+
+});
+
+save();
+
+renderColorEditor();
+
+renderStore();
+
+}
+
+
+/* =====================================================
+   حذف اللون
+===================================================== */
+
+function removeColor(index){
+
+const product=
+state.products.find(p=>p.id===currentProductId);
+
+if(!product)return;
+
+if(product.colors.length===1){
+
+alert("يجب أن يبقى لون واحد على الأقل.");
+
+return;
+
+}
+
+product.colors.splice(index,1);
+
+save();
+
+renderColorEditor();
+
+renderStore();
+
+}
+
+
+/* =====================================================
+   حفظ المنتج
+===================================================== */
+
+function saveProduct(){
+
+const product=
+state.products.find(p=>p.id===currentProductId);
+
+if(!product)return;
+
+product.name=
+document.getElementById("editName").value.trim()
+||"منتج بدون اسم";
+
+product.price=
+document.getElementById("editPrice").value.trim()
+||"0";
+
+product.description=
+document.getElementById("editDescription").value.trim();
+
+product.sizes=
+document.getElementById("editSizes")
+.value
+.split(",")
+.map(x=>x.trim())
+.filter(Boolean);
+
+save();
+
+renderStore();
+
+closeModal("editProductModal");
+
+alert("تم حفظ المنتج والصور ✅");
+
+}
+
+
+/* =====================================================
+   حذف المنتج
+===================================================== */
+
+function deleteProduct(id){
+
+if(!confirm("حذف المنتج؟"))return;
+
+state.products=
+state.products.filter(p=>p.id!==id);
+
+save();
+
+renderStore();
+
+}
+
+
+/* =====================================================
+   تفاصيل المنتج
+===================================================== */
+
+function openProduct(id,colorIndex){
+
+selectedProduct=
+state.products.find(p=>p.id===id);
+
+if(!selectedProduct)return;
+
+selectedColorIndex=colorIndex;
+
+quantity=1;
+
+showProduct();
+
+document
+.getElementById("productModal")
+.classList.add("open");
+
+}
+
+
+function showProduct(){
+
+const product=selectedProduct;
+
+const color=
+product.colors[selectedColorIndex];
+
+document.getElementById("detailProductName").textContent=
+product.name;
+
+document.getElementById("detailDescription").textContent=
+product.description;
+
+document.getElementById("detailPrice").textContent=
+product.price+" دج";
+
+document.getElementById("detailImage").src=
+color.image || "";
+
+document.getElementById("quantityValue").textContent=
+quantity;
+
+
+const colors=
+document.getElementById("detailColors");
+
+colors.innerHTML="";
+
+
+product.colors.forEach((c,index)=>{
+
+const b=document.createElement("button");
+
+b.className=
+"detail-color"+
+(index===selectedColorIndex?" selected":"");
+
+b.style.background=c.hex;
+
+b.title=c.name;
+
+b.onclick=function(){
+
+selectedColorIndex=index;
+
+showProduct();
+
+};
+
+colors.appendChild(b);
+
+});
+
+
+const sizes=
+document.getElementById("detailSize");
+
+sizes.innerHTML="";
+
+product.sizes.forEach(size=>{
+
+const option=
+document.createElement("option");
+
+option.value=size;
+
+option.textContent=size;
+
+sizes.appendChild(option);
+
+});
+
+}
+
+
+/* =====================================================
+   الكمية
+===================================================== */
+
+function changeQuantity(value){
+
+quantity+=value;
+
+if(quantity<1)
+quantity=1;
+
+document.getElementById("quantityValue").textContent=
+quantity;
+
+}
+
+
+/* =====================================================
+   فتح checkout
+===================================================== */
+
+function openCheckout(){
+
+const product=selectedProduct;
+
+const color=
+product.colors[selectedColorIndex];
+
+const size=
+document.getElementById("detailSize").value;
+
+document.getElementById("checkoutSummary").innerHTML=`
+
+<strong>${escapeHTML(product.name)}</strong>
+<br>
+اللون: ${escapeHTML(color.name)}
+<br>
+المقاس: ${escapeHTML(size)}
+<br>
+الكمية: ${quantity}
+<br>
+السعر: ${escapeHTML(product.price)} دج
+
+`;
+
+closeModal("productModal");
+
+document
+.getElementById("checkoutModal")
+.classList.add("open");
+
+}
+
+
+/* =====================================================
+   بناء معلومات الطلب
+===================================================== */
+
+function getOrderData(){
+
+const product=selectedProduct;
+
+const color=
+product.colors[selectedColorIndex];
+
+const size=
+document.getElementById("detailSize").value;
+
+const first=
+document.getElementById("firstName").value.trim();
+
+const last=
+document.getElementById("lastName").value.trim();
+
+const phone=
+document.getElementById("phone").value.trim();
+
+const wilaya=
+document.getElementById("wilaya");
+
+const commune=
+document.getElementById("commune").value;
+
+const address=
+document.getElementById("address").value.trim();
+
+const note=
+document.getElementById("note").value.trim();
+
+
+if(
+!first ||
+!last ||
+!phone ||
+!wilaya.value ||
+!commune ||
+!address
+){
+
+alert("أكمل معلومات الطلب أولاً.");
+
+return null;
+
+}
+
+
+const wilayaName=
+wilaya.options[wilaya.selectedIndex].text;
+
+
+const text=
+
+`🛍️ طلب جديد
+
+المنتج: ${product.name}
+اللون: ${color.name}
+المقاس: ${size}
+الكمية: ${quantity}
+السعر: ${product.price} دج
+
+الاسم: ${first}
+اللقب: ${last}
+الهاتف: ${phone}
+
+الولاية: ${wilayaName}
+البلدية: ${commune}
+العنوان: ${address}
+
+ملاحظة: ${note || "لا توجد"}`;
+
+
+return{
+ text:text,
+ image:color.image,
+ product:product,
+ color:color
+ };
+
+}
+
+
+/* =====================================================
+   الصورة + المعلومات
+===================================================== */
+
+async function shareCompleteOrder(){
+
+const order=getOrderData();
+
+if(!order)return;
+
+
+if(order.image && order.image.startsWith("data:")){
+
+try{
+
+const file=
+await dataURLToFile(
+order.image,
+"صورة-المنتج.jpg"
+);
+
+
+if(
+navigator.share &&
+navigator.canShare &&
+navigator.canShare({
+ files:[file]
+})
+){
+
+await navigator.share({
+
+title:"طلب جديد",
+
+text:order.text,
+
+files:[file]
+
+});
+
+return;
+
+}
+
+
+alert(
+"هذا المتصفح لا يدعم إرسال الصورة مع النص. سيتم فتح WhatsApp بالمعلومات فقط."
+);
+
+sendWhatsAppText();
+
+return;
+
+}catch(error){
+
+console.log(error);
+
+alert(
+"تعذر مشاركة الصورة. سيتم إرسال المعلومات إلى WhatsApp."
+);
+
+sendWhatsAppText();
+
+return;
+
+}
+
+}
+
+
+if(order.image && order.image.startsWith("http")){
+
+sendWhatsAppText(
+order.text+"\n\nصورة المنتج:\n"+order.image
+);
+
+return;
+
+}
+
+
+sendWhatsAppText(order.text);
+
+}
+
+
+/* =====================================================
+   تحويل الصورة
+===================================================== */
+
+async function dataURLToFile(dataURL,fileName){
+
+const response=
+await fetch(dataURL);
+
+const blob=
+await response.blob();
+
+return new File(
+[blob],
+fileName,
+{
+type:blob.type || "image/jpeg"
+}
+);
+
+}
+
+
+/* =====================================================
+   WhatsApp مباشر
+===================================================== */
+
+function sendWhatsAppText(customText=null){
+
+const order=
+customText
+?{text:customText}
+:getOrderData();
+
+if(!order)return;
+
+let number=
+state.orderWhatsapp
+.replace(/\D/g,"");
+
+if(number.startsWith("0")){
+
+number=
+"213"+
+number.substring(1);
+
+}
+
+const url=
+"https://wa.me/"+
+number+
+"?text="+
+encodeURIComponent(order.text);
+
+window.location.href=url;
+
+}
+
+
+/* =====================================================
+   الولايات
+===================================================== */
+
+const wilayas=[
+
+["01","أدرار"],
+["02","الشلف"],
+["03","الأغواط"],
+["04","أم البواقي"],
+["05","باتنة"],
+["06","بجاية"],
+["07","بسكرة"],
+["08","بشار"],
+["09","البليدة"],
+["10","البويرة"],
+["11","تمنراست"],
+["12","تبسة"],
+["13","تلمسان"],
+["14","تيارت"],
+["15","تيزي وزو"],
+["16","الجزائر"],
+["17","الجلفة"],
+["18","جيجل"],
+["19","سطيف"],
+["20","سعيدة"],
+["21","سكيكدة"],
+["22","سيدي بلعباس"],
+["23","عنابة"],
+["24","قالمة"],
+["25","قسنطينة"],
+["26","المدية"],
+["27","مستغانم"],
+["28","المسيلة"],
+["29","معسكر"],
+["30","ورقلة"],
+["31","وهران"],
+["32","البيض"],
+["33","إليزي"],
+["34","برج بوعريريج"],
+["35","بومرداس"],
+["36","الطارف"],
+["37","تندوف"],
+["38","تيسمسيلت"],
+["39","الوادي"],
+["40","خنشلة"],
+["41","سوق أهراس"],
+["42","تيبازة"],
+["43","ميلة"],
+["44","عين الدفلى"],
+["45","النعامة"],
+["46","عين تموشنت"],
+["47","غرداية"],
+["48","غليزان"],
+["49","تيميمون"],
+["50","برج باجي مختار"],
+["51","أولاد جلال"],
+["52","بني عباس"],
+["53","عين صالح"],
+["54","عين قزام"],
+["55","تقرت"],
+["56","جانت"],
+["57","المغير"],
+["58","المنيعة"],
+["59","أفلو"],
+["60","بريكة"],
+["61","القنطرة"],
+["62","بئر العاتر"],
+["63","العريشة"],
+["64","قصر الشلالة"],
+["65","عين وسارة"],
+["66","مسعد"],
+["67","قصر البخاري"],
+["68","بوسعادة"],
+["69","الأبيض سيدي الشيخ"]
+
+];
+
+
+function initWilayas(){
+
+const select=
+document.getElementById("wilaya");
+
+wilayas.forEach(w=>{
+
+const option=
+document.createElement("option");
+
+option.value=w[0];
+
+option.textContent=
+w[0]+" - "+w[1];
+
+select.appendChild(option);
+
+});
+
+}
+
+
+/* =====================================================
+   البلديات
+===================================================== */
+
+let communes=null;
+
+async function loadCommunes(){
+
+const id=
+document.getElementById("wilaya").value;
+
+const select=
+document.getElementById("commune");
+
+if(!id){
+
+select.innerHTML=
+`<option value="">اختر البلدية</option>`;
+
+return;
+
+}
+
+select.innerHTML=
+`<option>جاري تحميل البلديات...</option>`;
+
+
+try{
+
+if(!communes){
+
+const cache=
+localStorage.getItem("COMMUNES_2026_V2");
+
+if(cache){
+
+communes=JSON.parse(cache);
+
+}else{
+
+const response=
+await fetch(
+"https://mohamed-gp.github.io/algeria_69_wilayas/communes.json",
+{
+cache:"no-store"
+}
+);
+
+if(!response.ok)
+throw new Error();
+
+communes=
+await response.json();
+
+localStorage.setItem(
+"COMMUNES_2026_V2",
+JSON.stringify(communes)
+);
+
+}
+
+}
+
+
+const list=
+(communes.communes || [])
+.filter(
+c=>Number(c.wilaya_id)===Number(id)
+);
+
+
+select.innerHTML=
+`<option value="">اختر البلدية</option>`;
+
+
+list.forEach(c=>{
+
+const option=
+document.createElement("option");
+
+option.value=
+c.name_ar || c.name;
+
+option.textContent=
+c.name_ar || c.name;
+
+select.appendChild(option);
+
+});
+
+
+}catch(error){
+
+select.innerHTML=
+`<option>تعذر تحميل البلديات</option>`;
+
+}
+
+}
+
+
+/* =====================================================
+   المظهر
+===================================================== */
+
+function loadAppearance(){
+
+document.getElementById("appearanceName").value=
+state.storeName;
+
+document.getElementById("appearanceTitle").value=
+state.heroTitle;
+
+document.getElementById("appearanceDescription").value=
+state.heroDescription;
+
+document.getElementById("appearanceHeroColor").value=
+state.heroColor;
+
+document.getElementById("appearanceHeroText").value=
+state.heroTextColor;
+
+document.getElementById("appearanceBackground").value=
+state.background;
+
+}
+
+
+function saveAppearance(){
+
+state.storeName=
+document.getElementById("appearanceName").value;
+
+state.heroTitle=
+document.getElementById("appearanceTitle").value;
+
+state.heroDescription=
+document.getElementById("appearanceDescription").value;
+
+state.heroColor=
+document.getElementById("appearanceHeroColor").value;
+
+state.heroTextColor=
+document.getElementById("appearanceHeroText").value;
+
+state.background=
+document.getElementById("appearanceBackground").value;
+
+save();
+
+renderStore();
+
+alert("تم حفظ المظهر ✅");
+
+}
+
+
+/* =====================================================
+   الروابط
+===================================================== */
+
+function loadLinks(){
+
+document.getElementById("instagram").value=
+state.social.instagram;
+
+document.getElementById("tiktok").value=
+state.social.tiktok;
+
+document.getElementById("facebook").value=
+state.social.facebook;
+
+document.getElementById("socialWhatsapp").value=
+state.social.whatsapp;
+
+document.getElementById("website").value=
+state.social.website;
+
+}
+
+
+function saveLinks(){
+
+state.social.instagram=
+document.getElementById("instagram").value.trim();
+
+state.social.tiktok=
+document.getElementById("tiktok").value.trim();
+
+state.social.facebook=
+document.getElementById("facebook").value.trim();
+
+state.social.whatsapp=
+document.getElementById("socialWhatsapp").value.trim();
+
+state.social.website=
+document.getElementById("website").value.trim();
+
+save();
+
+alert("تم حفظ الروابط ✅");
+
+}
+
+
+/* =====================================================
+   صفحة روابطنا
+===================================================== */
+
+function openSocial(){
+
+const box=
+document.getElementById("socialLinks");
+
+box.innerHTML="";
+
+const links=[
+
+["📸 Instagram",state.social.instagram],
+
+["🎵 TikTok",state.social.tiktok],
+
+["📘 Facebook",state.social.facebook],
+
+["💬 WhatsApp",makeWhatsAppLink(state.social.whatsapp)],
+
+["🌐 الموقع",state.social.website]
+
+];
+
+const valid=
+links.filter(x=>x[1]);
+
+
+if(!valid.length){
+
+box.innerHTML=
+`<div class="empty">لا توجد روابط مضافة.</div>`;
+
+}else{
+
+valid.forEach(([name,url])=>{
+
+const a=
+document.createElement("a");
+
+a.textContent=name;
+
+a.href=safeURL(url);
+
+a.target="_blank";
+
+a.rel="noopener";
+
+box.appendChild(a);
+
+});
+
+}
+
+
+document
+.getElementById("socialModal")
+.classList.add("open");
+
+}
+
+
+/* =====================================================
+   الإعدادات
+===================================================== */
+
+function saveSettings(){
+
+state.orderWhatsapp=
+document
+.getElementById("orderWhatsapp")
+.value
+.trim();
+
+save();
+
+alert("تم حفظ رقم WhatsApp ✅");
+
+}
+
+
+/* =====================================================
+   الأدوات
+===================================================== */
+
+function openTools(){
+
+document
+.getElementById("drawer")
+.classList.add("open");
+
+}
+
+function closeTools(){
+
+document
+.getElementById("drawer")
+.classList.remove("open");
+
+}
+
+
+function showPanel(id,button){
+
+document
+.querySelectorAll(".tab")
+.forEach(x=>x.classList.remove("active"));
+
+button.classList.add("active");
+
+document
+.querySelectorAll(".panel")
+.forEach(x=>x.classList.remove("active"));
+
+document
+.getElementById(id)
+.classList.add("active");
+
+}
+
+
+/* =====================================================
+   Modal
+===================================================== */
+
+function closeModal(id){
+
+document
+.getElementById(id)
+.classList.remove("open");
+
+}
+
+
+/* =====================================================
+   أدوات
+===================================================== */
+
+function scrollProducts(){
+
+document
+.getElementById("productsSection")
+.scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+
+function makeWhatsAppLink(number){
+
+if(!number)return"";
+
+if(number.startsWith("http"))
+return number;
+
+let n=
+number.replace(/\D/g,"");
+
+if(n.startsWith("0"))
+n="213"+n.substring(1);
+
+return"https://wa.me/"+n;
+
+}
+
+
+function safeURL(url){
+
+if(
+url.startsWith("https://") ||
+url.startsWith("http://")
+){
+
+return url;
+
+}
+
+return"#";
+
+}
+
+
+function escapeHTML(value){
+
+return String(value||"")
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#039;");
+
+}
+
+
+function escapeAttribute(value){
+
+return escapeHTML(value);
+
+}
+
+
+/* =====================================================
+   التشغيل
+===================================================== */
+
+initWilayas();
+
+renderStore();
+
+loadAppearance();
+
+loadLinks();
+
+document.getElementById("orderWhatsapp").value=
+state.orderWhatsapp;
+
+</script>
+
+
+</body></html>
